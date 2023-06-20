@@ -5,6 +5,8 @@ import { UserRouter } from "./Routes/user.routes";
 import { NewsRouter } from "./Routes/news.routes";
 import { connectDB } from "./Config/dbConnection";
 import fileUpload from "express-fileupload";
+import cors from "cors";
+import { LoginRouter } from "./Routes/login.routes";
 
 // Dotenv config
 dotenv.config();
@@ -15,9 +17,19 @@ const app = express();
 // Connect To DB
 connectDB();
 
+// Cors
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+
 // Express middlewares
 app.use(express.json());
 app.use(fileUpload());
+
+// Login Router
+app.use(LoginRouter);
 
 // User Router
 app.use(UserRouter);

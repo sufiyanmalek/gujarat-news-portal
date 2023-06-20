@@ -7,11 +7,18 @@ import { passwordHasher } from "../Utils/passwordHasher";
 import { generateUsername } from "../Utils/generateUsername";
 import { UserCreds } from "../Models/userCredentials.model";
 import { sendNewUserCreds } from "../Utils/sendUserCreds.nodemailer";
+import { decodeJwt } from "../Middlewares/jwt.decode";
 
 // Create User
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: any, res: Response) => {
   try {
+    const token: any = req.headers.token;
+    decodeJwt(req, res, token);
+    const admin = req.data;
     const user: IUser = req.body;
+    user.adminId = admin._id;
+    user.createdBy = admin.fullName.firstName + " " + admin.fullName.lastName;
+    user.role = "User";
     // User Validation with Joi
     const validation = joiValidateUser(user);
     // When Validation fails

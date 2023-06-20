@@ -7,7 +7,6 @@ export interface INews {
   desc: string;
   reporterName: string;
   reporterId: Types.ObjectId;
-  publishedAt: Date;
   status: string;
   category: string;
   image: string;
@@ -39,46 +38,47 @@ const Categories = [
 ];
 
 // News Schema
-const newsSchema = new Schema<INews>({
-  title: {
-    type: String,
-    required: true,
+const newsSchema = new Schema<INews>(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    desc: {
+      type: String,
+      required: true,
+    },
+    reporterName: {
+      type: String,
+      required: true,
+    },
+    reporterId: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
+    status: {
+      type: String,
+      enum: ["Active", "Inactive", "Pending"],
+      default: "Pending",
+    },
+    category: {
+      type: String,
+      enum: Categories,
+      required: true,
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    video: {
+      type: String,
+      required: true,
+    },
   },
-  desc: {
-    type: String,
-    required: true,
-  },
-  reporterName: {
-    type: String,
-    required: true,
-  },
-  reporterId: {
-    type: Schema.Types.ObjectId,
-    ref: "user",
-  },
-  publishedAt: {
-    type: Date,
-    default: Date.now(),
-  },
-  status: {
-    type: String,
-    enum: ["Active", "Inactive", "Pending"],
-    required: true,
-  },
-  category: {
-    type: String,
-    enum: Categories,
-    required: true,
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-  video: {
-    type: String,
-    required: true,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 // News Model
 export const News = model<INews>("news", newsSchema);
